@@ -1,6 +1,6 @@
 """Module to read and write EXR image files into and from numpy arrays."""
 
-from typing import Dict, Iterable, Literal, Optional, Union, overload
+from typing import Dict, Iterable, Literal, Optional, Union, overload, Tuple
 
 import Imath
 import numpy as np
@@ -11,7 +11,7 @@ UINT = Imath.PixelType(Imath.PixelType.UINT)
 HALF = Imath.PixelType(Imath.PixelType.HALF)
 
 # conventions for channel names according to the number of channels
-default_channel_names: Dict[int, tuple[str, ...]] = {
+default_channel_names: Dict[int, Tuple[str, ...]] = {
     1: ("Y",),
     3: ("R", "G", "B"),
     4: ("R", "G", "B", "A"),
@@ -35,7 +35,7 @@ def set_default_channel_names(num_channels: int, channel_names: Iterable[str]) -
     default_channel_names[num_channels] = tuple(channel_names)
 
 
-def get_default_channel_names(num_channels: int) -> tuple[str, ...]:
+def get_default_channel_names(num_channels: int) -> Tuple[str, ...]:
     """Get the default channel names for a given number of channels.
 
     Args:
@@ -103,10 +103,10 @@ def read_dict(file_path: str) -> Dict[str, np.ndarray]:
     return data
 
 
-def _get_shape_from_dict(channels: Dict[str, np.ndarray]) -> tuple[int, int]:
+def _get_shape_from_dict(channels: Dict[str, np.ndarray]) -> Tuple[int, int]:
     if len(channels) == 0:
         raise ValueError("No data to write.")
-    image_shape: Optional[tuple[int, int]] = None
+    image_shape: Optional[Tuple[int, int]] = None
     for name, image in channels.items():
         if not image.ndim == 2:
             raise ValueError(
